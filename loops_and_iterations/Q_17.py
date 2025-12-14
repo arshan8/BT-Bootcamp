@@ -7,5 +7,8 @@ def natural_numbers(n):
 
 if __name__ == "__main__":
     n = int(input("Enter a positive integer: "))
+    
+    if n <=0:
+        raise ValueError("Input must be a positive integer.")
     result = natural_numbers(n)
     print("Natural numbers up to", n, "are:", result)

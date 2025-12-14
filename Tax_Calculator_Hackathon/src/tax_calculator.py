@@ -49,6 +49,52 @@ class SalaryCalculator:
         print(f"annual taxable Salary:     ₹{self.annual_taxable_income:,.2f}")
 
 
+    @property       #assuming flat tax system, can be changed to slab system
+    def tax(self):
+        income = self.annual_taxable_income
+
+        # Section 87A
+        if income <= 700_000:
+            return 0.0
+
+        elif income <= 300_000:
+            return 0.0
+
+        elif income <= 600_000:
+            return 0.05 * income
+
+        elif income <= 900_000:
+            return 0.10 * income
+
+        elif income <= 1_200_000:
+            return 0.15 * income
+
+        elif income <= 1_500_000:
+            return 0.20 * income
+
+        else:
+            return 0.30 * income
+
+
+    @property
+    def cess(self):
+        return self.tax * 0.04
+    
+
+    @property
+    def total_tax(self):
+        return self.tax + self.cess
+    
+
+    def display_tax_report(self):
+        print(f"Employee name:           {self.data.name}")
+        print(f"annual taxable Salary:     ₹{self.annual_taxable_income:,.2f}")
+        print(f"Tax:                     ₹{self.tax:,.2f}")
+        print(f"Cess:               ₹{self.cess:,.2f}")
+        print(f"total tax:        ₹{self.total_tax:,.2f}")
+      
+
+        
 
 
 def run_challenge_1():
@@ -73,6 +119,9 @@ def run_challenge_1():
         # calculator.generate_gross_report()
 
         calculator.generate_taxable_report()
+
+
+        calculator.display_tax_report()
 
     except ValidationError as e:
     

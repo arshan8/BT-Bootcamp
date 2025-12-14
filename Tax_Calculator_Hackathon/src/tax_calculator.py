@@ -6,9 +6,8 @@ class EmployeeInput(BaseModel):
 
     name: str
     emp_id: str
-    basic_monthly_salary: float = Field(ge=0)
-    special_allowances: float = Field(ge=0, description="Monthly")
-    
+    basic_monthly_salary: float = Field(ge=0, le = 1_00_000, description="Monthly")
+    special_allowances: float = Field(ge=0, le = 1_00_000, description="Monthly")
     annual_bonus_percent: float = Field(ge=0, le=100, description="Annual")
 
 
@@ -109,37 +108,31 @@ class SalaryCalculator:
 def run_challenge_1():
     print("Welcome to GlobalNext Solutions Tax Calculator.")
     
-    input_data = {
-        "name": "rohan",
-        "emp_id": "005005",
-        "basic_monthly_salary": 50000.00,
-        "special_allowances": 20000.00,
-        "annual_bonus_percent": 10.0 
-    }
-    
+    while True:
+        try:
+            
+            input_data = {
+                "name" : input("Enter Employee Name: "),
+                "emp_id": input("Enter Emp id: "),
+                "basic_monthly_salary": input("Enter monthly salary: "),
+                "special_allowances": input("Enter special allownace: "),
+                "annual_bonus_percent": input("Enter bonus percent: ")
+            }
+        
+            employee_1 = EmployeeInput(**input_data)
+            break
+            
+        except ValidationError as e:  #input data validation
+        
+            print("Invalid data")
+            print("Please re-enter the details correctly.\n")
+            print(e)
+        
     try:
-        
-        employee_1 = EmployeeInput(**input_data)
         calculator = SalaryCalculator(employee_1)
-        
-        # calculator.generate_gross_report()
-
-        # employee_1.basic_monthly_salary = 10  #handles changes effieicently
-        # calculator.generate_gross_report()
-
-        # calculator.generate_taxable_report()
-
-
-        # calculator.display_tax_report()
-
         calculator.print_report()
 
-    except ValidationError as e:
-    
-        print("Invalid data")
-        print(e)
-        
-    except ValueError as e:
+    except ValueError as e:      #calculation errors
         print("calculation error")
         print(e)
 

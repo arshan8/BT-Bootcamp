@@ -49,31 +49,30 @@ class SalaryCalculator:
         print(f"annual taxable Salary:     ₹{self.annual_taxable_income:,.2f}")
 
 
-    @property       #assuming flat tax system, can be changed to slab system
-    def tax(self):
+    @property
+    def tax(self):   #progressive tax calculation
         income = self.annual_taxable_income
 
-        # Section 87A
-        if income <= 700_000:
+      
+        if income <= 700_000:  #rebate
             return 0.0
 
-        elif income <= 300_000:
-            return 0.0
+        tax = 0.0
 
-        elif income <= 600_000:
-            return 0.05 * income
+        
+        if income > 300_000:
+            tax += min(income - 300_000, 300_000) * 0.05
+        if income > 600_000:
+            tax += min(income - 600_000, 300_000) * 0.10
+        if income > 900_000:
+            tax += min(income - 900_000, 300_000) * 0.15
+        if income > 1_200_000:
+            tax += min(income - 1_200_000, 300_000) * 0.20
+        if income > 1_500_000:
+            tax += (income - 1_500_000) * 0.30
 
-        elif income <= 900_000:
-            return 0.10 * income
+        return tax
 
-        elif income <= 1_200_000:
-            return 0.15 * income
-
-        elif income <= 1_500_000:
-            return 0.20 * income
-
-        else:
-            return 0.30 * income
 
 
     @property

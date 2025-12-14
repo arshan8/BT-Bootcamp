@@ -58,8 +58,7 @@ class SalaryCalculator:
             return 0.0
 
         tax = 0.0
-
-        
+  
         if income > 300_000:
             tax += min(income - 300_000, 300_000) * 0.05
         if income > 600_000:
@@ -73,12 +72,9 @@ class SalaryCalculator:
 
         return tax
 
-
-
     @property
     def cess(self):
         return self.tax * 0.04
-    
 
     @property
     def total_tax(self):
@@ -93,6 +89,11 @@ class SalaryCalculator:
         print(f"total tax:        ₹{self.total_tax:,.2f}")
       
 
+    @property
+    def net_annual_salary(self):
+        return self.annual_gross_salary - self.total_tax
+    
+    
         
 
 

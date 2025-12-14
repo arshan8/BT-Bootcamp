@@ -1,4 +1,6 @@
 from pydantic import BaseModel, Field, ValidationError
+import pandas as pd
+
 
 class EmployeeInput(BaseModel):
 
@@ -28,27 +30,13 @@ class SalaryCalculator:
         base_annual = self.monthly_gross_salary * 12
         return base_annual + (self.data.annual_bonus_percent / 100 * base_annual)
 
-    def generate_gross_report(self):
-        print(f"Employee name:           {self.data.name}")
-        print(f"Employee id:             {self.data.emp_id}")
-        print(f"Basic Monthly Salary:    ₹{self.data.basic_monthly_salary:,.2f}")
-        print(f"special allowances:      ₹{self.data.special_allowances:,.2f}")
-        print(f"annual Bonus (% of Gross): {self.data.annual_bonus_percent:.2f}%")
-        print(f"monthly gross Salary:    ₹{self.monthly_gross_salary:,.2f}")
-        print(f"annual Gross Salary:     ₹{self.annual_gross_salary:,.2f}")
-
-
+    
     @property  # Q_12
     def annual_taxable_income(self):
         return max(0,self.annual_gross_salary - self.standard_deduction)
 
-    def generate_taxable_report(self):
-        print(f"Employee name:           {self.data.name}")
-        print(f"annual Gross Salary:     ₹{self.annual_gross_salary:,.2f}")
-        print(f"Standard_deduction:    ₹{self.standard_deduction:,.2f}")
-        print(f"annual taxable Salary:     ₹{self.annual_taxable_income:,.2f}")
 
-
+    #Q 13
     @property
     def tax(self):   #progressive tax calculation
         income = self.annual_taxable_income
@@ -81,28 +69,49 @@ class SalaryCalculator:
         return self.tax + self.cess
     
 
-    def display_tax_report(self):
-        print(f"Employee name:           {self.data.name}")
-        print(f"annual taxable Salary:     ₹{self.annual_taxable_income:,.2f}")
-        print(f"Tax:                     ₹{self.tax:,.2f}")
-        print(f"Cess:               ₹{self.cess:,.2f}")
-        print(f"total tax:        ₹{self.total_tax:,.2f}")
-      
-
+    #Q 14
     @property
     def net_annual_salary(self):
         return self.annual_gross_salary - self.total_tax
     
-    
+
+    #Q15
+
+    def print_report(self):
+        
+        value = [
+            self.data.name,
+            self.data.emp_id,
+            self.monthly_gross_salary,
+            self.annual_gross_salary,
+            self.annual_taxable_income,
+            self.tax,
+            self.cess,
+            self.annual_taxable_income - self.tax - self.cess
+            ]
         
 
+        index = [
+            "Name",
+            "Emp ID",
+            "Monthly Gross Salary",
+            "Annual Gross Salary",
+            "Annual Taxable Income",
+            "Tax",
+            "Cess (4%)",
+            "Net Annual Salary"
+        ]
+
+        df = pd.DataFrame(value, index=index)
+        print(df)
+        
 
 def run_challenge_1():
     print("Welcome to GlobalNext Solutions Tax Calculator.")
     
     input_data = {
-        "name": "Sarah Connor",
-        "emp_id": "GNS473",
+        "name": "rohan",
+        "emp_id": "005005",
         "basic_monthly_salary": 50000.00,
         "special_allowances": 20000.00,
         "annual_bonus_percent": 10.0 
@@ -113,15 +122,17 @@ def run_challenge_1():
         employee_1 = EmployeeInput(**input_data)
         calculator = SalaryCalculator(employee_1)
         
-        calculator.generate_gross_report()
+        # calculator.generate_gross_report()
 
         # employee_1.basic_monthly_salary = 10  #handles changes effieicently
         # calculator.generate_gross_report()
 
-        calculator.generate_taxable_report()
+        # calculator.generate_taxable_report()
 
 
-        calculator.display_tax_report()
+        # calculator.display_tax_report()
+
+        calculator.print_report()
 
     except ValidationError as e:
     

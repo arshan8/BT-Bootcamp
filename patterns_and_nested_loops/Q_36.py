@@ -1,3 +1,4 @@
+
 def pattern(n:int):
     """ 1 
         22 
